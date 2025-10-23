@@ -11,7 +11,7 @@ const timetableRoutes = require('./routes/timetableRoutes')
 const app = express()
 
 app.use(cors({
-  origin: 'http://16.171.69.197:5173', // allow frontend
+  origin: 'http://localhost:5173', // allow frontend
   credentials: true
 }));
 app.use(morgan('dev'))
