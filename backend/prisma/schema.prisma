@@ -1,3 +1,4 @@
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,45 +15,48 @@ model Admin {
 }
 
 model Course {
-  id         Int      @id @default(autoincrement())
-  name       String
-  year       Int
-  subjects   Subject[]
+  id                Int               @id @default(autoincrement())
+  name              String
+  year              Int
+  subjects          Subject[]
+  timetableEntries  TimetableEntry[]  // 👈 added reverse relation
 }
 
 model Subject {
-  id           Int       @id @default(autoincrement())
-  name         String
-  code         String    @unique
-  type         SubjectType
-  hoursPerWeek Int
-  courseId     Int
-  course       Course    @relation(fields: [courseId], references: [id])
-  facultyId    Int?
-  faculty      Faculty?  @relation(fields: [facultyId], references: [id])
+  id                Int               @id @default(autoincrement())
+  name              String
+  code              String            @unique
+  type              SubjectType
+  hoursPerWeek      Int
+  courseId          Int
+  course            Course            @relation(fields: [courseId], references: [id])
+  facultyId         Int?
+  faculty           Faculty?          @relation(fields: [facultyId], references: [id])
+  timetableEntries  TimetableEntry[]  // 👈 added reverse relation
 }
 
 model Faculty {
-  id            Int       @id @default(autoincrement())
-  name          String
-  initials      String?
-  // availableSlots can be left empty or used for more advanced availability.
-  subjects      Subject[]
+  id                Int               @id @default(autoincrement())
+  name              String
+  initials          String?
+  subjects          Subject[]
+  timetableEntries  TimetableEntry[]  // 👈 added reverse relation
 }
 
 model Classroom {
-  id       Int    @id @default(autoincrement())
-  name     String @unique
-  capacity Int
+  id                Int               @id @default(autoincrement())
+  name              String @unique
+  capacity          Int
+  timetableEntries  TimetableEntry[]  // 👈 added reverse relation
 }
 
 model TimeSlot {
-  id        Int     @id @default(autoincrement())
-  day       Day
-  slotIndex Int     // 1..8
-  startTime String
-  endTime   String
-  // unique constraint enforced by combination day+slotIndex in code / optional DB index
+  id                Int               @id @default(autoincrement())
+  day               Day
+  slotIndex         Int
+  startTime         String
+  endTime           String
+  timetableEntries  TimetableEntry[]  // 👈 added reverse relation
 }
 
 model TimetableEntry {
@@ -62,11 +66,11 @@ model TimetableEntry {
   facultyId    Int
   classroomId  Int
   timeslotId   Int
-  course       Course     @relation(fields:[courseId], references:[id])
-  subject      Subject    @relation(fields:[subjectId], references:[id])
-  faculty      Faculty    @relation(fields:[facultyId], references:[id])
-  classroom    Classroom  @relation(fields:[classroomId], references:[id])
-  timeslot     TimeSlot   @relation(fields:[timeslotId], references:[id])
+  course       Course     @relation(fields: [courseId], references: [id])
+  subject      Subject    @relation(fields: [subjectId], references: [id])
+  faculty      Faculty    @relation(fields: [facultyId], references: [id])
+  classroom    Classroom  @relation(fields: [classroomId], references: [id])
+  timeslot     TimeSlot   @relation(fields: [timeslotId], references: [id])
   createdAt    DateTime   @default(now())
 }
 
