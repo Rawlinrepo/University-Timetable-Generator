@@ -16,7 +16,7 @@ model Admin {
 
 model Course {
   id                Int               @id @default(autoincrement())
-  name              String
+  name              String            @unique
   year              Int
   subjects          Subject[]
   timetableEntries  TimetableEntry[]  // 👈 added reverse relation
@@ -37,7 +37,7 @@ model Subject {
 
 model Faculty {
   id                Int               @id @default(autoincrement())
-  name              String
+  name              String            @unique
   initials          String?
   subjects          Subject[]
   timetableEntries  TimetableEntry[]  // 👈 added reverse relation
