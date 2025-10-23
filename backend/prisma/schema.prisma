@@ -1,0 +1,84 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id    Int    @id @default(autoincrement())
+  name  String
+  email String @unique
+}
+
+model Course {
+  id         Int      @id @default(autoincrement())
+  name       String
+  year       Int
+  subjects   Subject[]
+}
+
+model Subject {
+  id           Int       @id @default(autoincrement())
+  name         String
+  code         String    @unique
+  type         SubjectType
+  hoursPerWeek Int
+  courseId     Int
+  course       Course    @relation(fields: [courseId], references: [id])
+  facultyId    Int?
+  faculty      Faculty?  @relation(fields: [facultyId], references: [id])
+}
+
+model Faculty {
+  id            Int       @id @default(autoincrement())
+  name          String
+  initials      String?
+  // availableSlots can be left empty or used for more advanced availability.
+  subjects      Subject[]
+}
+
+model Classroom {
+  id       Int    @id @default(autoincrement())
+  name     String @unique
+  capacity Int
+}
+
+model TimeSlot {
+  id        Int     @id @default(autoincrement())
+  day       Day
+  slotIndex Int     // 1..8
+  startTime String
+  endTime   String
+  // unique constraint enforced by combination day+slotIndex in code / optional DB index
+}
+
+model TimetableEntry {
+  id           Int       @id @default(autoincrement())
+  courseId     Int
+  subjectId    Int
+  facultyId    Int
+  classroomId  Int
+  timeslotId   Int
+  course       Course     @relation(fields:[courseId], references:[id])
+  subject      Subject    @relation(fields:[subjectId], references:[id])
+  faculty      Faculty    @relation(fields:[facultyId], references:[id])
+  classroom    Classroom  @relation(fields:[classroomId], references:[id])
+  timeslot     TimeSlot   @relation(fields:[timeslotId], references:[id])
+  createdAt    DateTime   @default(now())
+}
+
+enum Day {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+}
+
+enum SubjectType {
+  THEORY
+  LAB
+}

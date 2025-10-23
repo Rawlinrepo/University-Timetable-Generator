@@ -1,0 +1,53 @@
+// backend/src/models/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id       Int    @id @default(autoincrement())
+  name     String
+  email    String @unique
+  password String
+}
+
+model Course {
+  id      Int     @id @default(autoincrement())
+  name    String
+  year    Int
+  subjects Subject[]
+}
+
+model Subject {
+  id       Int      @id @default(autoincrement())
+  name     String
+  course   Course   @relation(fields: [courseId], references: [id])
+  courseId Int
+}
+
+model Faculty {
+  id       Int    @id @default(autoincrement())
+  name     String
+  subjects Subject[]
+}
+
+model Classroom {
+  id     Int    @id @default(autoincrement())
+  name   String
+  type   String
+  capacity Int
+}
+
+model Timetable {
+  id          Int       @id @default(autoincrement())
+  day         String
+  period      Int
+  courseId    Int
+  subjectId   Int
+  facultyId   Int
+  classroomId Int
+}
