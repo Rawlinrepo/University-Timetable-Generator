@@ -19,7 +19,7 @@ app.use(express.json())
 
 app.use('/api/admin', adminRoutes)
 app.use('/api/courses', courseRoutes)
-app.use('/api/faculties', facultyRoutes)
+app.use('/api/faculty', facultyRoutes)
 app.use('/api/classrooms', classroomRoutes)
 app.use('/api/timetable', timetableRoutes)
 
